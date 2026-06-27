@@ -1,0 +1,691 @@
+﻿<Window x:Class="CyberSecurity_Bot.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="BIMO - Cybersecurity Awareness Bot"
+        Height="720" Width="480"
+        MinHeight="650" MinWidth="440"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFF0F3"
+        ResizeMode="CanResize">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Header bar -->
+            <RowDefinition Height="65"/>
+            <!-- Name entry (shown only at start) -->
+            <RowDefinition Height="Auto"/>
+            <!-- Tab buttons row -->
+            <RowDefinition Height="Auto"/>
+            <!-- Main content area -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- ROW 0: TOP HEADER BAR -->
+        <Border Grid.Row="0" Background="#FF2D55" BorderBrush="#CC0033" BorderThickness="0,0,0,3">
+            <Grid Margin="12,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Width="44" Height="44" CornerRadius="22"
+                        Background="#FF6B8A" BorderBrush="White" BorderThickness="2"
+                        VerticalAlignment="Center">
+                    <TextBlock Text="🦇" FontSize="22"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <TextBlock Text="BIMO" Foreground="White" FontSize="17"
+                               FontWeight="Bold" FontFamily="Segoe UI"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="8" Height="8" Fill="#AAFF00"
+                                 VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Text="Cybersecurity Assistant • online"
+                                   Foreground="#FFCCD5" FontSize="11"
+                                   FontFamily="Segoe UI" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Border Grid.Column="2" x:Name="UserBadge" Visibility="Collapsed"
+                        Background="#CC0033" BorderBrush="White" BorderThickness="1"
+                        CornerRadius="12" Padding="10,4" VerticalAlignment="Center">
+                    <TextBlock x:Name="UserBadgeText" Text="👤"
+                               Foreground="White" FontSize="11" FontFamily="Segoe UI"/>
+                </Border>
+            </Grid>
+        </Border>
+
+
+        <!-- ROW 1: NAME ENTRY PANEL -->
+        <Border Grid.Row="1" x:Name="NamePanel"
+                Background="#FFB3C1" BorderBrush="#FF2D55"
+                BorderThickness="0,0,0,2" Padding="14,10">
+            <StackPanel>
+                <TextBlock Text="🦇 Welcome! Enter your name to begin..."
+                           Foreground="#CC0033" FontSize="12" FontWeight="SemiBold"
+                           FontFamily="Segoe UI" Margin="0,0,0,8"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Background="White"
+                            BorderBrush="#FF6B8A" BorderThickness="2"
+                            CornerRadius="20" Padding="12,6">
+                        <TextBox x:Name="NameTextBox" Background="Transparent"
+                                 Foreground="#880022" BorderThickness="0"
+                                 FontSize="13" FontFamily="Segoe UI"
+                                 CaretBrush="#FF2D55" KeyDown="NameTextBox_KeyDown"/>
+                    </Border>
+                    <Button Grid.Column="1" Width="40" Height="40"
+                            Margin="8,0,0,0" Cursor="Hand" Click="StartButton_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Bd" Background="#FF2D55" CornerRadius="20">
+                                    <TextBlock Text="▶" Foreground="White" FontSize="16"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="#CC0033"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+
+        <!-- ROW 2: TAB NAVIGATION BUTTONS -->
+        <Border Grid.Row="2" Background="#FF2D55"
+                BorderBrush="#CC0033" BorderThickness="0,0,0,2">
+            <UniformGrid Rows="1" Columns="4">
+
+                <!-- Chat tab -->
+                <Button x:Name="TabChat" Content="💬 Chat"
+                        Background="#FF2D55" Foreground="White"
+                        BorderThickness="0" FontSize="12" FontWeight="Bold"
+                        FontFamily="Segoe UI" Height="38" Cursor="Hand"
+                        Click="TabChat_Click"/>
+
+                <!-- Tasks tab -->
+                <Button x:Name="TabTasks" Content="📋 Tasks"
+                        Background="#CC0033" Foreground="White"
+                        BorderThickness="0" FontSize="12" FontWeight="Bold"
+                        FontFamily="Segoe UI" Height="38" Cursor="Hand"
+                        Click="TabTasks_Click"/>
+
+                <!-- Quiz tab -->
+                <Button x:Name="TabQuiz" Content="🎮 Quiz"
+                        Background="#CC0033" Foreground="White"
+                        BorderThickness="0" FontSize="12" FontWeight="Bold"
+                        FontFamily="Segoe UI" Height="38" Cursor="Hand"
+                        Click="TabQuiz_Click"/>
+
+                <!-- Log tab -->
+                <Button x:Name="TabLog" Content="📜 Log"
+                        Background="#CC0033" Foreground="White"
+                        BorderThickness="0" FontSize="12" FontWeight="Bold"
+                        FontFamily="Segoe UI" Height="38" Cursor="Hand"
+                        Click="TabLog_Click"/>
+            </UniformGrid>
+        </Border>
+
+
+        <!-- ROW 3: CONTENT PANELS -->
+        <Grid Grid.Row="3">
+
+            <!-- ── CHAT PANEL ─────────────────────────────── -->
+            <Grid x:Name="ChatPanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="65"/>
+                </Grid.RowDefinitions>
+
+                <!-- Messages scroll area -->
+                <Border Grid.Row="0" Background="#FFF0F3">
+                    <ScrollViewer x:Name="ChatScroller"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  Padding="8,6">
+                        <StackPanel x:Name="MessagesPanel"/>
+                    </ScrollViewer>
+                </Border>
+
+                <!-- Quick topic chips -->
+                <Border Grid.Row="1" Background="#FFB3C1"
+                        BorderBrush="#FF2D55" BorderThickness="0,2,0,2" Padding="8,7">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="🔐 password"  Margin="3,0" Click="TopicButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="C" Background="#FF2D55" CornerRadius="14" Padding="11,5">
+                                            <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontSize="11" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="C" Property="Background" Value="#CC0033"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Content="🎣 phishing"  Margin="3,0" Click="TopicButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="C" Background="#FF2D55" CornerRadius="14" Padding="11,5">
+                                            <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontSize="11" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="C" Property="Background" Value="#CC0033"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Content="💸 scam"      Margin="3,0" Click="TopicButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="C" Background="#FF2D55" CornerRadius="14" Padding="11,5">
+                                            <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontSize="11" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="C" Property="Background" Value="#CC0033"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Content="🔒 privacy"   Margin="3,0" Click="TopicButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="C" Background="#FF2D55" CornerRadius="14" Padding="11,5">
+                                            <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontSize="11" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="C" Property="Background" Value="#CC0033"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Content="🦠 malware"   Margin="3,0" Click="TopicButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="C" Background="#FF2D55" CornerRadius="14" Padding="11,5">
+                                            <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontSize="11" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="C" Property="Background" Value="#CC0033"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Content="🛡️ 2fa"        Margin="3,0" Click="TopicButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="C" Background="#FF2D55" CornerRadius="14" Padding="11,5">
+                                            <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontSize="11" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="C" Property="Background" Value="#CC0033"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Content="🌐 vpn"        Margin="3,0" Click="TopicButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="C" Background="#FF2D55" CornerRadius="14" Padding="11,5">
+                                            <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontSize="11" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="C" Property="Background" Value="#CC0033"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Content="💾 backup"     Margin="3,0" Click="TopicButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="C" Background="#FF2D55" CornerRadius="14" Padding="11,5">
+                                            <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontSize="11" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="C" Property="Background" Value="#CC0033"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Content="📋 help"       Margin="3,0" Click="TopicButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="C" Background="#FF2D55" CornerRadius="14" Padding="11,5">
+                                            <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontSize="11" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="C" Property="Background" Value="#CC0033"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+
+                <!-- Input bar -->
+                <Border Grid.Row="2" Background="#FFB3C1"
+                        BorderBrush="#FF2D55" BorderThickness="0,2,0,0" Padding="10,0">
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="White"
+                                BorderBrush="#FF6B8A" BorderThickness="2"
+                                CornerRadius="22" Padding="14,8">
+                            <TextBox x:Name="UserInput" Background="Transparent"
+                                     Foreground="#880022" BorderThickness="0"
+                                     FontSize="13" FontFamily="Segoe UI"
+                                     CaretBrush="#FF2D55" IsEnabled="False"
+                                     KeyDown="UserInput_KeyDown"/>
+                        </Border>
+                        <Button Grid.Column="1" x:Name="SendBtn"
+                                Width="46" Height="46" Margin="8,0,0,0"
+                                IsEnabled="False" Click="SendButton_Click" Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="SB" Background="#FF2D55" CornerRadius="23" Width="46" Height="46">
+                                        <TextBlock Text="🩸" FontSize="20"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="SB" Property="Background" Value="#CC0033"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="SB" Property="Background" Value="#FFB3C1"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+
+
+            <!-- ── TASKS PANEL ────────────────────────────── -->
+            <Grid x:Name="TasksPanel" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Add task form -->
+                <Border Grid.Row="0" Background="#FFB3C1"
+                        BorderBrush="#FF2D55" BorderThickness="0,0,0,2" Padding="12,10">
+                    <StackPanel>
+                        <TextBlock Text="📋 Add a Cybersecurity Task"
+                                   Foreground="#CC0033" FontSize="13" FontWeight="Bold"
+                                   FontFamily="Segoe UI" Margin="0,0,0,8"/>
+
+                        <TextBlock Text="Task title:" Foreground="#880022"
+                                   FontSize="11" FontFamily="Segoe UI" Margin="0,0,0,3"/>
+                        <Border Background="White" BorderBrush="#FF6B8A"
+                                BorderThickness="1" CornerRadius="8" Padding="8,5" Margin="0,0,0,6">
+                            <TextBox x:Name="TaskTitleBox" Background="Transparent"
+                                     Foreground="#880022" BorderThickness="0"
+                                     FontSize="12" FontFamily="Segoe UI"
+                                     CaretBrush="#FF2D55"/>
+                        </Border>
+
+                        <TextBlock Text="Description:" Foreground="#880022"
+                                   FontSize="11" FontFamily="Segoe UI" Margin="0,0,0,3"/>
+                        <Border Background="White" BorderBrush="#FF6B8A"
+                                BorderThickness="1" CornerRadius="8" Padding="8,5" Margin="0,0,0,6">
+                            <TextBox x:Name="TaskDescBox" Background="Transparent"
+                                     Foreground="#880022" BorderThickness="0"
+                                     FontSize="12" FontFamily="Segoe UI"
+                                     CaretBrush="#FF2D55"/>
+                        </Border>
+
+                        <TextBlock Text="Reminder (e.g. 3 days, tomorrow, 2026-07-01):"
+                                   Foreground="#880022" FontSize="11"
+                                   FontFamily="Segoe UI" Margin="0,0,0,3"/>
+                        <Border Background="White" BorderBrush="#FF6B8A"
+                                BorderThickness="1" CornerRadius="8" Padding="8,5" Margin="0,0,0,8">
+                            <TextBox x:Name="TaskReminderBox" Background="Transparent"
+                                     Foreground="#880022" BorderThickness="0"
+                                     FontSize="12" FontFamily="Segoe UI"
+                                     CaretBrush="#FF2D55"/>
+                        </Border>
+
+                        <!-- task icon-->
+                        <Button Content="➕ Add Task" Height="34" Cursor="Hand"
+                                Click="AddTask_Click">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="Bd" CornerRadius="8">
+                                        <Border.Background>
+                                            <SolidColorBrush Color="#FF2D55" />
+                                        </Border.Background>
+                                        <TextBlock Text="{TemplateBinding Content}"
+                                                   Foreground="White" FontSize="13"
+                                                   FontWeight="Bold" FontFamily="Segoe UI"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="#CC0033" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <!-- Task list -->
+                <Border Grid.Row="1" Background="#FFF0F3">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10,8">
+                        <StackPanel x:Name="TaskListPanel"/>
+                    </ScrollViewer>
+                </Border>
+
+                <!-- DB status bar -->
+                <Border Grid.Row="2" Background="#FFB3C1"
+                        BorderBrush="#FF2D55" BorderThickness="0,2,0,0" Padding="10,6">
+                    <TextBlock x:Name="DbStatusText"
+                               Text="📦 Tasks stored in memory (MySQL optional)"
+                               Foreground="#880022" FontSize="11" FontFamily="Segoe UI"/>
+                </Border>
+            </Grid>
+
+
+            <!-- ── QUIZ PANEL ─────────────────────────────── -->
+            <Grid x:Name="QuizPanel" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Quiz header -->
+                <Border Grid.Row="0" Background="#FFB3C1"
+                        BorderBrush="#FF2D55" BorderThickness="0,0,0,2" Padding="12,10">
+                    <StackPanel>
+                        <TextBlock Text="🎮 Cybersecurity Mini-Quiz"
+                                   Foreground="#CC0033" FontSize="14" FontWeight="Bold"
+                                   FontFamily="Segoe UI"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <TextBlock x:Name="QuizProgressText"
+                                       Text="Press Start to begin!"
+                                       Foreground="#880022" FontSize="11"
+                                       FontFamily="Segoe UI"/>
+                            <TextBlock x:Name="QuizScoreText"
+                                       Text=""
+                                       Foreground="#FF2D55" FontSize="11"
+                                       FontWeight="Bold" FontFamily="Segoe UI"
+                                       Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Question area -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                              Background="#FFF0F3" Padding="14,10">
+                    <StackPanel x:Name="QuizContentPanel">
+
+                        <!-- Start screen -->
+                        <StackPanel x:Name="QuizStartPanel" HorizontalAlignment="Center"
+                                    Margin="0,30,0,0">
+                            <TextBlock Text="🦇" FontSize="48"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Test your cybersecurity knowledge!"
+                                       Foreground="#880022" FontSize="14"
+                                       FontFamily="Segoe UI" TextAlignment="Center"
+                                       Margin="0,10,0,4"/>
+                            <TextBlock Text="10+ questions  •  Multiple choice &amp; True/False"
+                                       Foreground="#CC0033" FontSize="11"
+                                       FontFamily="Segoe UI" TextAlignment="Center"
+                                       Margin="0,0,0,20"/>
+                            <Button Content="▶  Start Quiz" Height="42" Width="160"
+                                    Cursor="Hand" Click="StartQuiz_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="Bd" CornerRadius="21">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="#FF2D55" />
+                                            </Border.Background>
+                                            <TextBlock Text="{TemplateBinding Content}"
+                                                       Foreground="White" FontSize="14"
+                                                       FontWeight="Bold" FontFamily="Segoe UI"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background">
+                                                    <Setter.Value>
+                                                        <SolidColorBrush Color="#CC0033" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Question display -->
+                        <StackPanel x:Name="QuizQuestionPanel" Visibility="Collapsed">
+                            <Border Background="White" BorderBrush="#FF6B8A"
+                                    BorderThickness="1.5" CornerRadius="10" Padding="14,12"
+                                    Margin="0,0,0,14">
+                                <TextBlock x:Name="QuestionText"
+                                           Text="" Foreground="#440011"
+                                           FontSize="14" FontFamily="Segoe UI"
+                                           TextWrapping="Wrap" FontWeight="SemiBold"/>
+                            </Border>
+
+                            <!-- Answer buttons built in code -->
+                            <StackPanel x:Name="AnswerButtonsPanel" Margin="0,0,0,12"/>
+
+                            <!-- Feedback label -->
+                            <Border x:Name="FeedbackBorder" Visibility="Collapsed"
+                                    Background="#FFF0F3" BorderBrush="#FF2D55"
+                                    BorderThickness="1" CornerRadius="8" Padding="12,8"
+                                    Margin="0,0,0,12">
+                                <TextBlock x:Name="FeedbackText"
+                                           Text="" Foreground="#880022"
+                                           FontSize="12" FontFamily="Segoe UI"
+                                           TextWrapping="Wrap"/>
+                            </Border>
+
+                            <Button x:Name="NextQuestionBtn"
+                                    Content="Next Question ▶" Height="36"
+                                    Visibility="Collapsed" Cursor="Hand"
+                                    Click="NextQuestion_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="Bd" CornerRadius="8">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="#FF2D55" />
+                                            </Border.Background>
+                                            <TextBlock Text="{TemplateBinding Content}"
+                                                       Foreground="White" FontSize="13"
+                                                       FontWeight="Bold" FontFamily="Segoe UI"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background">
+                                                    <Setter.Value>
+                                                        <SolidColorBrush Color="#CC0033" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Results panel -->
+                        <StackPanel x:Name="QuizResultsPanel" Visibility="Collapsed"
+                                    HorizontalAlignment="Center" Margin="0,20,0,0">
+                            <TextBlock x:Name="ResultsEmoji" Text="🎉"
+                                       FontSize="48" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="ResultsTitle" Text="Quiz Complete!"
+                                       Foreground="#CC0033" FontSize="18" FontWeight="Bold"
+                                       FontFamily="Segoe UI" HorizontalAlignment="Center"
+                                       Margin="0,8,0,4"/>
+                            <TextBlock x:Name="ResultsScore" Text=""
+                                       Foreground="#880022" FontSize="14"
+                                       FontFamily="Segoe UI" HorizontalAlignment="Center"
+                                       Margin="0,0,0,4"/>
+                            <TextBlock x:Name="ResultsFeedback" Text=""
+                                       Foreground="#FF2D55" FontSize="13" FontWeight="SemiBold"
+                                       FontFamily="Segoe UI" HorizontalAlignment="Center"
+                                       TextAlignment="Center" TextWrapping="Wrap"
+                                       Margin="0,0,0,20"/>
+                            <Button Content="🔄  Play Again" Height="38" Width="140"
+                                    Cursor="Hand" Click="StartQuiz_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="Bd" CornerRadius="19">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="#FF2D55" />
+                                            </Border.Background>
+                                            <TextBlock Text="{TemplateBinding Content}"
+                                                       Foreground="White" FontSize="13"
+                                                       FontWeight="Bold" FontFamily="Segoe UI"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background">
+                                                    <Setter.Value>
+                                                        <SolidColorBrush Color="#CC0033" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Quiz footer -->
+                <Border Grid.Row="2" Background="#FFB3C1"
+                        BorderBrush="#FF2D55" BorderThickness="0,2,0,0" Padding="10,6">
+                    <TextBlock Text="🩸 Answer correctly to boost your cybersecurity skills!"
+                               Foreground="#880022" FontSize="11" FontFamily="Segoe UI"/>
+                </Border>
+            </Grid>
+
+
+            <!-- ── ACTIVITY LOG PANEL ─────────────────────── -->
+            <Grid x:Name="LogPanel" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="#FFB3C1"
+                        BorderBrush="#FF2D55" BorderThickness="0,0,0,2" Padding="12,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="📜 Activity Log"
+                                       Foreground="#CC0033" FontSize="14"
+                                       FontWeight="Bold" FontFamily="Segoe UI"/>
+                            <TextBlock Text="Recent actions taken by BIMO"
+                                       Foreground="#880022" FontSize="11"
+                                       FontFamily="Segoe UI"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="🗑 Clear" Margin="10,0,0,0"
+                                Cursor="Hand" Click="ClearLog_Click"
+                                VerticalAlignment="Center">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="Bd" CornerRadius="8" Padding="12,5">
+                                        <Border.Background>
+                                            <SolidColorBrush Color="#FF2D55" />
+                                        </Border.Background>
+                                        <TextBlock Text="{TemplateBinding Content}"
+                                                   Foreground="White" FontSize="11"
+                                                   FontWeight="Bold" FontFamily="Segoe UI"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="#CC0033" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1" Background="#FFF0F3">
+                    <ScrollViewer x:Name="LogScroller"
+                                  VerticalScrollBarVisibility="Auto" Padding="10,8">
+                        <StackPanel x:Name="LogListPanel"/>
+                    </ScrollViewer>
+                </Border>
+
+                <Border Grid.Row="2" Background="#FFB3C1"
+                        BorderBrush="#FF2D55" BorderThickness="0,2,0,0" Padding="10,6">
+                    <TextBlock x:Name="LogCountText"
+                               Text="Showing last 10 actions"
+                               Foreground="#880022" FontSize="11" FontFamily="Segoe UI"/>
+                </Border>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</Window>
