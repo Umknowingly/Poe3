@@ -10,7 +10,7 @@ Interactive Quiz - Test your cybersecurity knowledge with 12+ questions
 
 Activity Log - Track all your actions and interactions
 
-Tech Stack
+Details
 Frontend: WPF (Windows Presentation Foundation)
 
 Language: C# (.NET Framework 4.8)
