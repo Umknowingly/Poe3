@@ -24,4 +24,4 @@ Windows 7 SP1 or later
 
 .NET Framework 4.8
 
-MySQL Server 5.7+ (optional)
+MySQL Server 5.7+ 
